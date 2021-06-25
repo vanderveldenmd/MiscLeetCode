@@ -1,0 +1,51 @@
+#Taken from leetcode daily challenge for 6/24/21
+#The goal is to push a ball out of boundes where m is the number of rows, n is the number of columns, maxMove is the number of spaces the ball can move, and the starting locations.
+#This program makes use of a dynamic programming array, working on tabulation from the ground up, meaning I will start with 0 moves and work my way up to maxMoves - 1.
+#Since we know being in a certain spot will guarantee certain conditions, we can add the number of possibilities from previous moves in order to build an array.
+#Once the array is built we simply return the number we want to find.
+
+class Solution:
+    def findPaths(self, m: int, n: int, maxMove: int, startRow: int, startColumn: int) -> int:
+        dp = [[[0 for i in range(n)] for j in range(m)] for k in range(maxMove)]
+        
+        #This solves for the trivial solution of maxMoves = 0 will always be 0.
+        if maxMove == 0:
+            return 0
+
+        def buildDP(row, col, moves):
+            numOut = 0
+            rowCon1, rowCon2, colCon1, colCon2 = 0, 0, 0, 0   #since the board is variable, we need to solve for all these solutions
+            if row == 0 or row == m - 1 or col == 0 or col == n - 1:
+                if row == 0:  #We don't want to go into space not defined by the dp array, so we simply assume we can get the ball out and return
+                    numOut += 1
+                    rowCon1 = 1
+                if row == m - 1:    #I will check at each position in case there is an array of only 1 row, we can get out 2 times at each position, at least.
+                    numOut += 1
+                    rowCon2 = 1
+                if col == 0:
+                    numOut += 1
+                    colCon1 = 1
+                if col == n - 1:
+                    numOut += 1
+                    colCon2 = 1
+            if rowCon1 != 1 and moves > 0:    #If we are only starting, we don't need to check the first position in the array since that shouldn't have any outs.
+                numOut += dp[moves - 1][row-1][col]
+            if rowCon2 != 1 and moves > 0:
+                numOut += dp[moves - 1][row+1][col]
+            if colCon1 != 1 and moves > 0:
+                numOut += dp[moves - 1][row][col-1]
+            if colCon2 != 1 and moves > 0:
+                numOut += dp[moves - 1][row][col+1]
+
+            #Here we simply set the current location and return
+            dp[moves][row][col] = numOut
+            return
+
+        #All we want to do is iterate through the entire array until it is fully built out.
+        for i in range(maxMove):
+            for j in range(m):
+                for k in range(n):
+                    buildDP(j,k,i)
+
+        #Finally we return the value we want to find.
+        return (dp[maxMove-1][startRow][startColumn] % ((10 ** 9)+7))
