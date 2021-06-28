@@ -1,0 +1,29 @@
+#Taken from LeetCode daily coding challenge for 6/28/21
+#This challenge asks to remove all duplicate values from a string.
+
+#I will be doing this by implementing an array as a stack and working through each character in the string, eliminating all duplicates.
+
+class Solution:
+    def removeDuplicates(self, s: str) -> str:
+        charArray = []
+        returnStr = ""
+        
+        #For the trivial case we simply return an empty string, which we have already initialized above.
+        if len(s) == 0:
+            return returnStr
+        
+        #Putting the first value into the "stack"
+        charArray.append(s[0])
+        
+        #Two conditions exist here, first the current character matches the top of the stack, in which case, there is a duplicate, I am simply removing the char at the
+        #top of the stack and not adding that char to the return string. If the char does not match what is on top of the stack, we add it to the top of the stack.
+        for i in range(1, len(s)):
+            if len(charArray) > 0 and charArray[len(charArray) - 1] == s[i]:
+                charArray.pop(len(charArray) - 1)
+            else:
+                charArray.append(s[i])
+         
+        #Whatever is left in the stack at the end has no duplicates, so it can be added to the string that will be returned and returned.
+        for i in charArray:
+            returnStr += i
+        return returnStr
