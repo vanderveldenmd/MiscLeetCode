@@ -1,0 +1,20 @@
+class Solution:
+    def matrixReshape(self, mat: List[List[int]], r: int, c: int) -> List[List[int]]:
+      #in order to get the new shape of the matrix, we must first know the original shape of the matrix.
+        size1 = len(mat)
+        size2 = len(mat[0])
+        if size1 * size2 != r * c:  #If the number of elements are not the same than it simply won't be possible to reshape the matrix. This checks against that case.
+            return mat
+        else:
+          #First thing I will do is make a new matrix with the given constraints and initialize the cell we are checking against at 0,0.
+            newMat = [[0 for i in range(c)] for j in range(r)]
+            newRow = 0
+            newCol = 0
+            for i in range(size1):
+                for j in range(size2):
+                    newMat[newRow][newCol] = mat[i][j]
+                    newCol += 1
+                    if newCol >= len(newMat[0]):  #If we run out of columns we simply go to the next row at column 0.
+                        newCol = 0
+                        newRow += 1
+            return newMat
