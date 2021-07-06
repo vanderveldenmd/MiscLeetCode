@@ -1,0 +1,23 @@
+class Solution:
+    def minSetSize(self, arr: List[int]) -> int:
+      #This array needs to be able to contain all values which could be present in the current array. The index of the array will be the number itself and it's value will contain
+      #how many times this number appears in the array.
+        newArr = [0 for i in range(max(arr))]
+        arrLen = len(arr)
+        
+        #Here we simply add to the array when we get the next number
+        for i in arr:
+            newArr[i-1] += 1
+        
+        #We want to sort the array in reverse so that the largest numbers appear first. This will allow us to select the numbers that appear the most times.
+        newArr.sort(reverse = True)
+        total = 0
+        ans = 0
+        
+        #This is the while condition. We will remove values from the front of the list until we have an array that is half as big.
+        while total < math.floor(arrLen / 2):
+            total += newArr[0]
+            ans += 1
+            newArr.pop(0)
+        return ans
+        
